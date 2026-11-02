@@ -3,6 +3,11 @@
 Ocho ejercicios pequeños, **37 tests** y un objetivo: que te sientas cómodo con
 el Rust que necesitas para leer y escribir un programa de Solana.
 
+Este repositorio es **público**. No necesitas una invitación, y no tienes
+permisos de escritura en él. **Haz un fork**, resuelve los ejercicios en tu fork
+y abre un pull request. El pull request es tu entrega; el instructor califica
+sus checks.
+
 Los ejercicios corresponden a las dos presentaciones:
 
 | Presentación | Ejercicios | Tests |
@@ -13,9 +18,25 @@ Los ejercicios corresponden a las dos presentaciones:
 
 ## Inicio rápido
 
+1. Haz clic en **Fork** en la parte superior de esta página. Esto crea tu propia
+   copia en GitHub.
+2. Clona **tu fork**, no el repositorio de la clase:
+
 ```bash
-git clone https://github.com/dev3pack/Solana-Rust-Bootcamp-ES.git
+git clone https://github.com/<tu-usuario>/Solana-Rust-Bootcamp-ES.git
 cd Solana-Rust-Bootcamp-ES
+```
+
+3. Guarda el repositorio de la clase como `upstream`, para poder traer
+   actualizaciones más adelante:
+
+```bash
+git remote add upstream https://github.com/dev3pack/Solana-Rust-Bootcamp-ES.git
+```
+
+4. Ejecuta los tests:
+
+```bash
 cargo test
 ```
 
@@ -23,17 +44,16 @@ La primera ejecución compila el crate y todos los tests fallan, porque cada
 función termina en `todo!()`. Eso es lo esperado. Elige un ejercicio, lee su
 tarea y haz que sus tests pasen.
 
-### Trabaja en tu propia rama
+## Trabaja en tu propia rama
 
-`main` es el punto de partida limpio. No subas tus soluciones ahí. Crea una
-rama con tu nombre una sola vez y luego sigue haciendo push a ella:
+Crea una rama en tu fork. No trabajes en `main`.
 
 ```bash
 git checkout -b solutions/tu-nombre
 ```
 
-Así tu trabajo queda separado del de los demás estudiantes, y el CI muestra tu
-propio resultado en lugar del de otra persona.
+`main` se queda como el punto de partida. Tu rama contiene tus respuestas. Esto
+también mantiene tu trabajo separado del de los demás.
 
 Ejecuta un ejercicio a la vez mientras trabajas:
 
@@ -47,8 +67,35 @@ Ejecuta todo antes de hacer push:
 cargo test
 ```
 
-También verás advertencias de `unused variable` en las funciones iniciales.
+Haz push a **tu fork**:
+
+```bash
+git add .
+git commit -m "ex01-ex08 solutions"
+git push -u origin solutions/tu-nombre
+```
+
+Verás advertencias de `unused variable` en las funciones iniciales.
 Desaparecen a medida que reemplazas cada `todo!()` con una implementación real.
+
+## Entrega tu trabajo
+
+Después de hacer push de tu rama, abre un pull request:
+
+1. Ve a tu fork en GitHub.
+2. Haz clic en **Contribute** → **Open pull request**.
+3. Base repository: `dev3pack/Solana-Rust-Bootcamp-ES`.
+4. Base branch: `main`.
+5. Head repository: tu fork.
+6. Compare branch: `solutions/tu-nombre`.
+7. Título: `Soluciones — tu nombre`.
+8. Haz clic en **Create pull request**.
+
+**No** hagas merge del pull request. Es una entrega, no un cambio al repositorio
+de la clase. El instructor califica los checks y luego lo cierra.
+
+Tu fork es público, igual que este repositorio. No pongas contraseñas, claves
+privadas ni datos personales en él.
 
 ## Qué hay en el repositorio
 
@@ -80,7 +127,7 @@ AI_POLICY.md
 4. Ejecuta `cargo test --test exNN`.
 5. Lee el error del compilador de arriba hacia abajo: código de error, flecha, ayuda.
 6. Cuando el ejercicio esté en verde, pasa al siguiente.
-7. Ejecuta `cargo test` y haz push a tu rama cuando pasen los 37 tests.
+7. Cuando pasen los 37 tests, haz push de tu rama y abre el pull request.
 
 Los tests son la especificación. Si un test y la descripción de una tarea no
 coinciden, gana el test. Si crees que un test está mal, pregúntale al
@@ -88,6 +135,8 @@ instructor; no lo edites.
 
 ## Reglas
 
+- **Mantén tus cambios en `src/`.** No edites `tests/`, `tests.sha256` ni
+  `.github/`.
 - **No edites nada en `tests/`.** El CI ejecuta `sha256sum -c tests.sha256`
   antes de los tests. Un archivo de test modificado hace fallar el build aunque
   el código pase.
@@ -115,12 +164,20 @@ de llamadas innecesarias a `unwrap()` y `clone()`, y puede pedirte que expliques
 una solución. Pasar los tests con código que no puedes explicar no cuenta como
 aprobado.
 
+La nota sale de los checks de tu **pull request**, no de un push directo al
+repositorio de la clase.
+
 ## El CI y el checksum
 
-Cada push a tu rama, y cada pull request, ejecuta:
+Cada pull request al repositorio de la clase ejecuta:
 
 1. `sha256sum -c tests.sha256` — verifica que los archivos de test no cambiaron.
 2. `cargo test --locked` — ejecuta los 37 tests.
+
+Los push a tu fork también pueden ejecutar el workflow, si tienes Actions
+habilitado ahí. La ejecución que cuenta es la del pull request. Si es tu primer
+pull request, GitHub puede pedirle al instructor que apruebe el workflow; eso es
+normal.
 
 El CI está en rojo al inicio, porque `todo!()` hace panic. Se pone en verde
 cuando pasan los 37 tests. Para verificar el checksum tú mismo en macOS:
@@ -136,9 +193,8 @@ git checkout -- tests/
 ```
 
 Luego vuelve a ejecutar los tests. Si agregaste un test propio, ponlo en un
-archivo aparte fuera de `tests/` o elimínalo antes de hacer push; el checksum
-solo cubre los archivos oficiales, y los archivos extra no forman parte de la
-nota.
+archivo aparte fuera de `tests/` o elimínalo antes de abrir el pull request;
+solo cuentan los 37 tests oficiales.
 
 ## Errores comunes del compilador
 
@@ -166,7 +222,10 @@ esqueleto.
 
 ## Preguntas
 
-Abre un issue en este repositorio o pregunta en el canal de la cohorte. Incluye
-el número del ejercicio, el comando exacto que ejecutaste y el error completo
+Abre un issue en el **repositorio de la clase**:
+<https://github.com/dev3pack/Solana-Rust-Bootcamp-ES/issues>
+
+El instructor no ve los issues que abras en tu propio fork. Incluye el número
+del ejercicio, el comando exacto que ejecutaste y el error completo
 del compilador. No pegues solo la última línea; la primera línea y la flecha
 importan.
