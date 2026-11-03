@@ -4,6 +4,8 @@
 //! Nada de `HashMap` ni traits: solo un struct, un historial `Vec<String>` y
 //! `Result`.
 
+pub const LAMPORTS_PER_SOL: u64 = 1_000_000_000;
+
 /// Todo lo que puede salir mal en el mini banco.
 #[derive(Debug, PartialEq)]
 pub enum BankError {
@@ -22,7 +24,11 @@ pub struct BankAccount {
 impl BankAccount {
     /// Crea una cuenta con cero lamports y un historial vacío.
     pub fn new(owner: &str) -> Self {
-        todo!()
+        Self {
+            owner: owner.to_string(),
+            lamports: 0,
+            history: Vec::new(),
+        }
     }
 
     /// Deposita lamports y lo registra en el historial.
@@ -30,7 +36,13 @@ impl BankAccount {
     /// Retorna `BankError::ZeroAmount` para un depósito de cero. Un depósito
     /// exitoso agrega `"deposit <amount>"` al historial.
     pub fn deposit(&mut self, amount: u64) -> Result<(), BankError> {
-        todo!()
+        if amount == 0 {
+            return Err(BankError::ZeroAmount);
+        }
+
+        self.lamports += amount;
+        self.history.push(format!("deposit {}", amount));
+        Ok(())
     }
 
     /// Retira lamports y lo registra en el historial.
@@ -39,11 +51,24 @@ impl BankAccount {
     /// `BankError::InsufficientFunds` cuando el saldo es insuficiente. Un retiro
     /// exitoso agrega `"withdraw <amount>"` al historial.
     pub fn withdraw(&mut self, amount: u64) -> Result<(), BankError> {
-        todo!()
+        if amount == 0 {
+            return Err(BankError::ZeroAmount);
+        }
+
+        if amount > self.lamports {
+            return Err(BankError::InsufficientFunds {
+                available: self.lamports,
+                required: amount,
+            });
+        }
+
+        self.lamports -= amount;
+        self.history.push(format!("withdraw {}", amount));
+        Ok(())
     }
 
     /// Retorna el saldo en SOL enteros, descartando el residuo.
     pub fn balance_in_sol(&self) -> u64 {
-        todo!()
+        self.lamports / LAMPORTS_PER_SOL
     }
 }
